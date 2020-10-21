@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:padding="30dp"
+    tools:context=".Therapy.TherapyActivity">
+
+    <!--Nome Terapia-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/therapy_name"
+            android:hint="Nome Terapia"
+            android:ems="10"
+            android:inputType="text"
+            android:textSize="20sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Nome Medicinale-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_marginTop="15dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/drug_name"
+            android:hint="Nome Medicinale"
+            android:ems="10"
+            android:inputType="text"
+            android:textSize="20sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!--Dosaggio-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleziona il dosaggio"
+        android:layout_marginTop="15dp"
+        android:textSize="20sp"
+        />
+    <NumberPicker
+        android:id="@+id/numeroDosaggio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"></NumberPicker>
+
+    <!--Orario-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_time_drug"
+        android:hint="Orario assunzione medicinali"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:clickable="true"
+        />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/lv_time"
+        />
+
+    <!--Ripetizione giorni settimanali-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_days_drug"
+        android:hint="Giorni assunzione medicinali"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:clickable="true"
+        />
+    <TextView
+        android:id="@+id/text_view_days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="  "
+        android:textSize="18sp"/>
+
+
+    <!--Data fine terapia-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/data_fine_terapia"
+        android:layout_marginTop="20dp"
+        android:hint="Data Fine Terapia"
+        android:ems="10"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/text_view_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/data_fine_terapia"
+        android:layout_centerHorizontal="true"
+        android:text="  "
+        android:textSize="18sp"/>
+
+    <!--Aggiungi terapia-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_conferma"
+        android:layout_marginTop="15dp"
+        android:clickable="true"
+        android:text="AGGIUNGI ALLA LISTA TERAPIE">
+    </Button>
+
+    <!--Visualizza lista terapie-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_viewAll"
+        android:layout_marginTop="15dp"
+        android:clickable="true"
+        android:text="VEDI LISTA TERAPIE">
+    </Button>
+
+</LinearLayout>

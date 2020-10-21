@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "826826749138",
+    "firebase_url": "https://helena-9eb3e.firebaseio.com",
+    "project_id": "helena-9eb3e",
+    "storage_bucket": "helena-9eb3e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826826749138:android:087429f85d9f29b39c290b",
+        "android_client_info": {
+          "package_name": "com.dev.helena"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826826749138-p6l02jsks4j9d7fs7nujrq5fi5umlq0p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABy4jmSEgECgd8ZApCowDfS6MuKbNkeX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826826749138-p6l02jsks4j9d7fs7nujrq5fi5umlq0p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
