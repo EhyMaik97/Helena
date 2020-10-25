@@ -155,7 +155,6 @@ public class Login extends AppCompatActivity {
 
         /*Sign in with Google*/
         createRequest();
-
         signInGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

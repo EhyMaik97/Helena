@@ -1,8 +1,8 @@
 package com.dev.helena.Therapy;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -18,32 +18,40 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import com.dev.helena.DatabaseHelper;
 import com.dev.helena.R;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import static java.lang.String.valueOf;
 
 
 public class TherapyActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
-    TextView therapyName, dateEnd, drugName, textTimeDrug, textDateView, textViewDate, textDaysDdrug, textViewDays;
-    ArrayAdapter timeArrayAdapter, daysArrayAdapter;
+    TextView therapyName, textViewdateEnd, drugName, textTimeDrug, textDateView, textViewDate, textDaysDdrug, textViewDays;
+    ArrayAdapter timeArrayAdapter;
     ListView lv_time_therapy;
     int hour, minutes;
     String date;
     NumberPicker numDos;
     Button btnConf, btnViewTherapy;
-    DatabaseHelper dbh;
     final List<TimeDrug> retrunTimeDrug = new ArrayList<>();
-    final List<String> retrunDaysDrug = new ArrayList<String>();
+    final List<String> retrunDaysDrug = new ArrayList<>();
     String[] listItems;
     boolean[] checkedItems;
     ArrayList<Integer> mUserItems = new ArrayList<>();
+    private FirebaseDatabase db;                            //field per l'istanza del database
+    private DatabaseReference dbRef, therapyRef;             //field per il riferimento alla posizione dei dati
+    private FirebaseUser fbUser;
+    private FirebaseAuth mAuth;
+    private DatabaseReference userRef;
 
 
     @Override
@@ -51,8 +59,7 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_therapy_form);
 
-        dbh = new DatabaseHelper(TherapyActivity.this);
-
+        /*Fields*/
         lv_time_therapy = findViewById(R.id.lv_time);
         therapyName = findViewById(R.id.therapy_name);
         textViewDate = findViewById(R.id.text_view_date);
@@ -61,29 +68,81 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
         textTimeDrug = findViewById(R.id.text_time_drug);
         textDaysDdrug = findViewById(R.id.text_days_drug);
         textDateView = findViewById(R.id.text_view_date);
-        dateEnd = findViewById(R.id.data_fine_terapia);
+        textViewdateEnd = findViewById(R.id.data_fine_terapia);
         numDos = findViewById(R.id.numeroDosaggio);
         numDos.setMinValue(1);
         numDos.setMaxValue(10);
         btnConf = findViewById(R.id.btn_conferma);
         btnViewTherapy = findViewById(R.id.btn_viewAll);
-        //listview e adapter per gli orari
-        timeArrayAdapter = new ArrayAdapter<TimeDrug>(TherapyActivity.this, android.R.layout.simple_list_item_1, retrunTimeDrug);
+        timeArrayAdapter = new ArrayAdapter<TimeDrug>(TherapyActivity.this, android.R.layout.simple_list_item_1, retrunTimeDrug); //listview e adapter per gli orari
         lv_time_therapy.setAdapter(timeArrayAdapter);
+        db = FirebaseDatabase.getInstance();        //recupero dell'istanza del database
+        // posiziono il riferimento al database in modo da poter aggiungere il coupon su firebase
+        dbRef = FirebaseDatabase.getInstance().getReference("all_therapies").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        /*SCELTA DEGLI ORARI*/
-        textTimeDrug.setOnClickListener(new View.OnClickListener() {
+
+        /*Methods*/
+        selectTimes(textTimeDrug);
+        selectDays(textDaysDdrug);
+        selectEndDate(textViewdateEnd);
+
+        btnConf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(), "Orario Dosaggio");
+                mAuth = FirebaseAuth.getInstance();
+                fbUser = mAuth.getCurrentUser();
+                userRef = FirebaseDatabase.getInstance().getReference("user");
+                String userID = fbUser.getUid();
+                userRef.child(userID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Therapy therapy = new Therapy(therapyName.getText().toString(), drugName.getText().toString(), numDos.getValue(), date);
+                        String cpId = dbRef.push().getKey();
+                        dbRef.child(cpId).setValue(therapy);
+                        dbRef.child(cpId).child("times").setValue(retrunTimeDrug);
+                        dbRef.child(cpId).child("days").setValue(retrunDaysDrug);
+                        Toast.makeText(TherapyActivity.this, "Terapia aggiunta correttamente", Toast.LENGTH_SHORT).show();
+                        finish();
+                        startActivity(getIntent());
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
-        /*SCELTA DEI GIORNI SETTIMANALI*/
+        /*PULSANTE VISUALIZZA LISTA TERAPIE*/
+        btnViewTherapy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent in = new Intent(TherapyActivity.this, ListViewTherapy.class);
+                startActivity(in);
+            }
+        });
+    }
+
+    /*SCELTA DATA FINE TERAPIA*/
+    private void selectEndDate(TextView textView) {
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(TherapyActivity.this, TherapyActivity.this,
+                        Calendar.getInstance().get(Calendar.YEAR),
+                        Calendar.getInstance().get(Calendar.MONTH),
+                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.show();
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            }
+        });
+    }
+
+    /*DATE PICKER PER LASCELTA DEI GIORNI SETTIMANALI*/
+    private void selectDays(TextView textView) {
         listItems = getResources().getStringArray(R.array.days_choice);
         checkedItems = new boolean[listItems.length];
-        textDaysDdrug.setOnClickListener(new View.OnClickListener() {
+        textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(TherapyActivity.this);
@@ -91,9 +150,9 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
                 mBuilder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
-                        if(isChecked){
+                        if (isChecked) {
                             mUserItems.add(position);
-                        }else{
+                        } else {
                             mUserItems.remove((Integer.valueOf(position)));
                         }
                     }
@@ -134,58 +193,15 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
                 mDialog.show();
             }
         });
+    }
 
-        /*SCELTA DATA FINE TERAPIA*/
-        dateEnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(TherapyActivity.this, TherapyActivity.this,
-                        Calendar.getInstance().get(Calendar.YEAR),
-                        Calendar.getInstance().get(Calendar.MONTH),
-                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.show();
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            }
-        });
-
-        /*PULSANTE CONFERMA AGGIUNTA TERAPIA*/
-        btnConf.setOnClickListener(new View.OnClickListener() {
+    /*TIME PICKER PER LA SCELTA DEGLI ORARI*/
+    private void selectTimes(TextView textview) {
+        textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkFields()) {
-                    TimeDrug timeDrug = null;
-                    Therapy therapy;
-                    DaysDrug daysDrug = null;
-                    try {
-                        therapy = new Therapy(-1, therapyName.getText().toString(), drugName.getText().toString(), numDos.getValue(), date);
-                        timeDrug = new TimeDrug(-1, hour, minutes, therapy.getId());
-                        daysDrug = new DaysDrug(-1, retrunDaysDrug, therapy.getId());
-                        Toast.makeText(TherapyActivity.this, "La terapia è stata aggiunta alla lista", Toast.LENGTH_SHORT).show();
-                        finish();
-                        startActivity(getIntent());
-                    } catch (Exception e) {
-                        e.getMessage();
-                        therapy = new Therapy(-1, "error", "error", 0, "");
-                        Toast.makeText(TherapyActivity.this, "Errore nell'aggiunta della terpia alla lista, ricontrollare i campi", Toast.LENGTH_SHORT).show();
-                        finish();
-                        startActivity(getIntent());
-                    }
-                    DatabaseHelper databaseHelper = new DatabaseHelper(TherapyActivity.this);
-                    databaseHelper.addOneTime(timeDrug);
-                    databaseHelper.addOnedDay(daysDrug);
-                    databaseHelper.addOneTherapy(therapy);
-                } else {
-
-                }
-            }
-        });
-
-        /*PULSANTE VISUALIZZA LISTA TERAPIE*/
-        btnViewTherapy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent in = new Intent(TherapyActivity.this, ListViewTherapy.class);
-                startActivity(in);
+                DialogFragment timePicker = new TimePickerFragment();
+                timePicker.show(getSupportFragmentManager(), "Orario Dosaggio");
             }
         });
     }

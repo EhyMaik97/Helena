@@ -4,42 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DaysDrug {
-    List<String> day;
-    int id, therapyID;
+    List<String> days;
 
-    public DaysDrug(int id, List<String> day, int therapyID)
+    public DaysDrug(ArrayList<String> days)
     {
-        this.id = id;
-        this.day = day;
-        this.therapyID = therapyID;
+        this.days = days;
     }
 
-    public DaysDrug(ArrayList<String> day)
-    {
-        this.day = day;
+    public List<String> getDays() {
+        return days;
     }
 
-    public List<String> getDay() {
-        return day;
+    public void setDays(List<String> days) {
+        this.days = days;
     }
 
-    public void setDay(List<String> day) {
-        this.day = day;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getTherapyID() {
-        return therapyID;
-    }
-
-    public void setTherapyID(int therapyID) {
-        this.therapyID = therapyID;
-    }
 }

@@ -1,4 +1,10 @@
 <resources>
+    <plurals name="noTherapy">
+        <item quantity="one">Una terapia selezionabile</item>
+        <item quantity="two">Due terapie selezionabili</item>
+        <item quantity="few">Poche terapie selezionabili</item>
+        <item quantity="other">Zero terapie selezionabili</item>
+    </plurals>
     <string name="app_name">Helena</string>
     <string name="errorMsgField">Completare il campo</string>
     <string-array name="days_choice">

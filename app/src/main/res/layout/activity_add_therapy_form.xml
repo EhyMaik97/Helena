@@ -68,7 +68,7 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="140dp"
         android:id="@+id/lv_time"
         />
 
@@ -96,7 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/data_fine_terapia"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:hint="Data Fine Terapia"
         android:ems="10"
         android:textSize="20sp"/>
@@ -114,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_conferma"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="50dp"
         android:clickable="true"
         android:text="AGGIUNGI ALLA LISTA TERAPIE">
     </Button>

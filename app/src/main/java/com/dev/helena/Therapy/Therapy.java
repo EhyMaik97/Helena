@@ -1,15 +1,19 @@
 package com.dev.helena.Therapy;
 
 
+import com.google.firebase.database.Exclude;
+
 public class Therapy {
-    private int id;
     private String name;
     private int dosage;
-    private String endTime;
+    private String endTime, key;
     private String drugName;
 
-    public Therapy(int id, String name, String drugName, int dosage, String endTime) {
-        this.id = id;
+    Therapy(){
+
+    }
+
+    public Therapy(String name, String drugName, int dosage, String endTime) {
         this.name = name;
         this.drugName = drugName;
         this.dosage = dosage;
@@ -22,14 +26,6 @@ public class Therapy {
 
     public void setDrugName(String drugName) {
         this.drugName = drugName;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -56,10 +52,18 @@ public class Therapy {
         this.endTime = endTime;
     }
 
+    @Exclude
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     @Override
     public String toString() {
         return "Terapia: " + name + "  [ Medicinale: " + drugName + ", Dosaggio: " + dosage + ",Fine Terapia: " + endTime +"]";
 
+    }
+
+    public String getKey() {
+        return key;
     }
 }

@@ -1,68 +1,94 @@
 package com.dev.helena.Therapy;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.dev.helena.DatabaseHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.dev.helena.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class ListViewTherapy extends AppCompatActivity {
+public class ListViewTherapy extends AppCompatActivity implements RcViewAdapter.OnItemClickListener{
 
-    ArrayAdapter therapyArrayAdapter;
-    ListView lv_therapy;
+    DatabaseReference databaseReference;
+    ProgressDialog progressDialog;
+    List<Therapy> list = new ArrayList<>();
+    RecyclerView recyclerView;
+    RcViewAdapter adapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_therapy);
-        final DatabaseHelper dbh = new DatabaseHelper(ListViewTherapy.this);
-        lv_therapy = findViewById(R.id.lv_therapy);
 
-        showTherapyOnListView(dbh);
-
-        lv_therapy.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(ListViewTherapy.this));
+        progressDialog = new ProgressDialog(ListViewTherapy.this);
+        databaseReference = FirebaseDatabase.getInstance().getReference("all_therapies").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public boolean onItemLongClick(final AdapterView<?> adapterView, View view, int i, long l) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(ListViewTherapy.this);
-                final Therapy clickedTherapy = (Therapy) adapterView.getItemAtPosition(i);
-                builder.setMessage("Sei sicuro di voler eliminare questa terapia?")
-                        .setCancelable(false)
-                        .setPositiveButton("Sì", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //ListViewTherapy.super.onBackPressed();
-                                dbh.deleteOne(clickedTherapy);
-                                Toast.makeText(ListViewTherapy.this, "Terapia: " + clickedTherapy.getName() + " eliminata con successo", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-                return false;
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Therapy therapy = snapshot.getValue(Therapy.class);
+                    therapy.setKey(snapshot.getKey());
+                    list.add(therapy);
+                }
+                adapter = new RcViewAdapter(ListViewTherapy.this, list);
+                adapter.setOnItemClickListener(ListViewTherapy.this);
+                recyclerView.setAdapter(adapter);
+                progressDialog.dismiss();
+                // AlertDialog se non ci sono terapie
+                if(list.isEmpty()){
+                    final AlertDialog.Builder builderEmpty = new AlertDialog.Builder(ListViewTherapy.this);
+                    Resources res = getResources();
+                    String therapyFound = res.getQuantityString(R.plurals.noTherapy, 0);
+                    builderEmpty.setTitle(therapyFound);
+                    builderEmpty.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    builderEmpty.show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialog.dismiss();
             }
         });
 
     }
 
-    private void showTherapyOnListView(DatabaseHelper dbh)
-    {
-        therapyArrayAdapter = new ArrayAdapter<Therapy>(ListViewTherapy.this, android.R.layout.simple_list_item_1, dbh.getAllTherapy());
-        lv_therapy.setAdapter(therapyArrayAdapter);
+
+    @Override
+    public void onItemClick(int position) {
+
     }
 
+    //Metodo per la cancellazione di un coupon
+    @Override
+    public void onDeleteItemClick(int position) {
+        final Therapy selectedItem = list.get(position); //recupero la posizione del coupon nella lista
+        final String selectedKey = selectedItem.getKey(); //recupero la chiave del coupon
+        databaseReference.child(selectedKey).removeValue(); //eliminazione coupon dal database attraverso la chiave
+        finish();
+        startActivity(getIntent());
+    }
 }
