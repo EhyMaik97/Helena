@@ -76,8 +76,7 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
         btnViewTherapy = findViewById(R.id.btn_viewAll);
         timeArrayAdapter = new ArrayAdapter<TimeDrug>(TherapyActivity.this, android.R.layout.simple_list_item_1, retrunTimeDrug); //listview e adapter per gli orari
         lv_time_therapy.setAdapter(timeArrayAdapter);
-        db = FirebaseDatabase.getInstance();        //recupero dell'istanza del database
-        // posiziono il riferimento al database in modo da poter aggiungere il coupon su firebase
+        db = FirebaseDatabase.getInstance();
         dbRef = FirebaseDatabase.getInstance().getReference("all_therapies").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
 
