@@ -7,12 +7,45 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <AutoCompleteTextView
-        android:id="@+id/auto_text_search"
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Cerca Qui"
-        />
+        android:hint="Cerca un sintomo o una patologia"
+        android:id="@+id/editTxtSearch">
+    </EditText>
+    
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CERCA"
+        android:id="@+id/btnSearch">
+    </Button>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtViewKeySearched"
+        android:textSize="27dp"
+        android:textStyle="bold">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtViewResults"
+        android:textSize="20dp">
+    </TextView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtOtherDesc"
+        android:textSize="20dp">
+    </TextView>
+    <TextView
+        android:id="@+id/txtWikiLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:textSize="20dp"/>
 
 
 </LinearLayout>
