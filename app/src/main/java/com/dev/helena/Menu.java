@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.dev.helena.ClinicDirectory.Profile;
 import com.dev.helena.MedicalDictionary.MedicalDictionary;
+import com.dev.helena.Monitoring.AddMonitoringActivity;
 import com.dev.helena.Therapy.TherapyActivity;
 
 public class Menu extends AppCompatActivity
@@ -21,12 +22,12 @@ public class Menu extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        btn_sugg_medico = (Button) findViewById(R.id.button_sugg_medico);
-        btn_analisi_sint = (Button) findViewById(R.id.button_analisi_sintomi);
-        btn_dizionario = (Button) findViewById(R.id.button_diz_medico);
-        btn_terapie= (Button) findViewById(R.id.button_terapie);
-        btn_monitoraggio = (Button) findViewById(R.id.button_monitoraggio);
-        btn_profilo = (Button) findViewById(R.id.profilo_utente);
+        btn_sugg_medico = findViewById(R.id.button_sugg_medico);
+        btn_analisi_sint = findViewById(R.id.button_analisi_sintomi);
+        btn_dizionario = findViewById(R.id.button_diz_medico);
+        btn_terapie= findViewById(R.id.button_terapie);
+        btn_monitoraggio = findViewById(R.id.button_monitoraggio);
+        btn_profilo = findViewById(R.id.profilo_utente);
 
         btn_sugg_medico.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +65,8 @@ public class Menu extends AppCompatActivity
         btn_monitoraggio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent in = new Intent(Menu_form.this, Monitoraggio.class);
-//                startActivity(in);
+                Intent in = new Intent(Menu.this, AddMonitoringActivity.class);
+                startActivity(in);
             }
         });
 

@@ -130,15 +130,10 @@ public class EditProfile extends AppCompatActivity {
         if(requestCode == 1000){
             if(resultCode == Activity.RESULT_OK){
                 Uri imageUri = data.getData();
-
                 //profileImage.setImageURI(imageUri);
-
                 uploadImageToFirebase(imageUri);
-
-
             }
         }
-
     }
 
     private void uploadImageToFirebase(Uri imageUri) {

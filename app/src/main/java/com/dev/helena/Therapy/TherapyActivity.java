@@ -48,7 +48,7 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
     boolean[] checkedItems;
     ArrayList<Integer> mUserItems = new ArrayList<>();
     private FirebaseDatabase db;                            //field per l'istanza del database
-    private DatabaseReference dbRef, therapyRef;             //field per il riferimento alla posizione dei dati
+    private DatabaseReference dbRef;             //field per il riferimento alla posizione dei dati
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
