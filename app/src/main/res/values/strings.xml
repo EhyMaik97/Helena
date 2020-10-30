@@ -5,6 +5,12 @@
         <item quantity="few">Poche terapie selezionabili</item>
         <item quantity="other">Zero terapie selezionabili</item>
     </plurals>
+    <plurals name="noMonitoring">
+        <item quantity="one">Un monitoraggio selezionabile</item>
+        <item quantity="two">Due monitoraggi selezionabili</item>
+        <item quantity="few">Poche monitoraggi selezionabili</item>
+        <item quantity="other">Zero monitoraggi selezionabili</item>
+    </plurals>
     <string name="app_name">Helena</string>
     <string name="errorMsgField">Completare il campo</string>
     <string-array name="days_choice">

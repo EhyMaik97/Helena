@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.dev.helena.ClinicDirectory.Profile;
 import com.dev.helena.MedicalDictionary.MedicalDictionary;
-import com.dev.helena.Monitoring.AddMonitoringActivity;
+import com.dev.helena.Monitoring.ListMonitoringActivity;
 import com.dev.helena.Therapy.TherapyActivity;
 
 public class Menu extends AppCompatActivity
@@ -65,7 +65,7 @@ public class Menu extends AppCompatActivity
         btn_monitoraggio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent in = new Intent(Menu.this, AddMonitoringActivity.class);
+                Intent in = new Intent(Menu.this, ListMonitoringActivity.class);
                 startActivity(in);
             }
         });

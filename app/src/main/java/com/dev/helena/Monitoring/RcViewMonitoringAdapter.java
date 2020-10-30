@@ -1,4 +1,4 @@
-package com.dev.helena.Therapy;
+package com.dev.helena.Monitoring;
 
 import android.content.Context;
 import android.view.ContextMenu;
@@ -13,15 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.helena.R;
+import com.dev.helena.Monitoring.ListMonitoringActivity;
+import com.dev.helena.Monitoring.Monitoring;
 
 import java.util.List;
 
-public class RcViewAdapter extends RecyclerView.Adapter<RcViewAdapter.ViewHolder> {
+public class RcViewMonitoringAdapter extends RecyclerView.Adapter<RcViewMonitoringAdapter.ViewHolder> {
     Context context;
-    List<Therapy> cp;
+    List<Monitoring> cp;
     private OnItemClickListener mListener;
 
-    public RcViewAdapter(Context context, List<Therapy> TempList) {
+    public RcViewMonitoringAdapter(Context context, List<Monitoring> TempList) {
         this.cp = TempList;
         this.context = context;
     }
@@ -29,7 +31,7 @@ public class RcViewAdapter extends RecyclerView.Adapter<RcViewAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_therapy, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_monitoring, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -37,11 +39,9 @@ public class RcViewAdapter extends RecyclerView.Adapter<RcViewAdapter.ViewHolder
     // Set dei dati interessati
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Therapy coupon = cp.get(position);
-        holder.NameCpTextView.setText(coupon.getName());
-        holder.CodeCpTextView.setText(coupon.getDrugName());
-        holder.descCpTextView.setText(coupon.getEndTime());
-        holder.PercentDiscountTextView.setText(String.valueOf(coupon.getDosage()));
+        Monitoring monitoring = cp.get(position);
+        holder.NameMonitoringTextView.setText(monitoring.getNameMonitoring());
+        holder.DateMonitoringTextView.setText(monitoring.getDate());
     }
 
     @Override
@@ -51,14 +51,12 @@ public class RcViewAdapter extends RecyclerView.Adapter<RcViewAdapter.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
 
-        public TextView NameCpTextView, PercentDiscountTextView, CodeCpTextView, descCpTextView;
+        public TextView NameMonitoringTextView, DateMonitoringTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            NameCpTextView = (TextView) itemView.findViewById(R.id.ShowCpName);
-            CodeCpTextView = (TextView) itemView.findViewById(R.id.ShowCpCode);
-            descCpTextView = (TextView) itemView.findViewById(R.id.ShowDescCp);
-            PercentDiscountTextView = (TextView) itemView.findViewById(R.id.ShowPercentCoupon);
+            NameMonitoringTextView = (TextView) itemView.findViewById(R.id.ShowMonitoringName);
+            DateMonitoringTextView = (TextView) itemView.findViewById(R.id.ShowMonitoringDate);
             itemView.setOnClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
         }
@@ -90,7 +88,7 @@ public class RcViewAdapter extends RecyclerView.Adapter<RcViewAdapter.ViewHolder
         // Creazione del menu onPressed
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            contextMenu.setHeaderTitle("Seleziona opazione");
+            contextMenu.setHeaderTitle("Seleziona opzione");
             MenuItem deleteItem = contextMenu.add(Menu.NONE, 1, 1, "Rimuovi");
             deleteItem.setOnMenuItemClickListener(this);
         }
@@ -101,7 +99,7 @@ public class RcViewAdapter extends RecyclerView.Adapter<RcViewAdapter.ViewHolder
         void onItemClick(int position);
         void onDeleteItemClick(int position);
     }
-    public void setOnItemClickListener(ListViewTherapy listener) {
+    public void setOnItemClickListener(ListMonitoringActivity listener) {
         mListener = (OnItemClickListener) listener;
     }
 }

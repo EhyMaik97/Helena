@@ -5,6 +5,7 @@ public class Monitoring {
     private String nameMonitoring;
     private String date;
     private String pathImage;
+    private String key;
 
     Monitoring()
     {
@@ -48,4 +49,13 @@ public class Monitoring {
     public String toString() {
         return "Nome referto: " + nameMonitoring + '\'' + ", Data referto= " + date + '\'' + '}';
     }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
 }

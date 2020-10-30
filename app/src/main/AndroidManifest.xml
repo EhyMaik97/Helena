@@ -11,14 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Monitoring.ListMonitoringActivity"></activity>
+        <activity
+            android:name=".Monitoring.ListMonitoringActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Monitoring.SearchMonitoringActivity" />
-        <activity android:name=".Monitoring.AddMonitoringActivity" />
+        <activity android:name=".Monitoring.AddMonitoringActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ClinicDirectory.EditProfile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Therapy.ListViewTherapy"
+            android:name=".Therapy.ListTherapy"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Therapy.TherapyActivity"

@@ -96,7 +96,8 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
                         String cpId = dbRef.push().getKey();
                         dbRef.child(cpId).setValue(monitoring);
                         finish();
-                        startActivity(getIntent());
+                        Intent in = new Intent(AddMonitoringActivity.this, ListMonitoringActivity.class);
+                        startActivity(in);
                     }
 
 
