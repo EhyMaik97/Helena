@@ -2,17 +2,20 @@ package com.dev.helena.Monitoring;
 
 public class Monitoring {
 
-    private String nameMonitoring, date;
+    private String nameMonitoring;
+    private String date;
+    private String pathImage;
 
     Monitoring()
     {
 
     }
 
-    public Monitoring(String name, String date)
+    public Monitoring(String name, String date, String path)
     {
         this.nameMonitoring = name;
         this.date = date;
+        this.pathImage = path;
     }
 
 
@@ -31,6 +34,15 @@ public class Monitoring {
     public void setNameMonitoring(String nameMonitoring) {
         this.nameMonitoring = nameMonitoring;
     }
+
+    public String getPathImage() {
+        return pathImage;
+    }
+
+    public void setPathImage(String pathImage) {
+        this.pathImage = pathImage;
+    }
+
 
     @Override
     public String toString() {

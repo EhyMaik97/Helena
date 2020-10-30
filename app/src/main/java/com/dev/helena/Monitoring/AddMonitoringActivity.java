@@ -36,6 +36,7 @@ import java.util.Calendar;
 
 public class AddMonitoringActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    String timeExt;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     StorageReference storageReference;
@@ -51,14 +52,14 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_monitoring);
+        setContentView(R.layout.activity_add_monitoring);
         nameMonitoring = findViewById(R.id.monitoring_name);
         imageMonitoring = findViewById(R.id.monitoring_image);
         addBtn = findViewById(R.id.add_Btn);
         textDate = findViewById(R.id.data_referto);
         textDateRefView = findViewById(R.id.text_view_date);
         chBtn = findViewById(R.id.choose_Btn);
-
+        timeExt = System.currentTimeMillis() + ".";
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -84,15 +85,16 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
                 userRef.child(userID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //AGGIUNTA NOME E DATA NEL REALTIME DATABASE
-                        Monitoring monitoring = new Monitoring(nameMonitoring.getText().toString(), date);
-                        String cpId = dbRef.push().getKey();
-                        dbRef.child(cpId).setValue(monitoring);
                         //AGGIUNTA DELLE FOTO CARICATE NELLO STORAGE
                         if(upload != null && upload.isInProgress())
                             Toast.makeText(AddMonitoringActivity.this, "Caricamento", Toast.LENGTH_LONG).show();
                         else
                             FileUploader();
+                        //AGGIUNTA NOME E DATA NEL REALTIME DATABASE
+                        Monitoring monitoring = new Monitoring(nameMonitoring.getText().toString(), date, timeExt+ getExtension(imguri));
+                        System.out.println(monitoring.getPathImage());
+                        String cpId = dbRef.push().getKey();
+                        dbRef.child(cpId).setValue(monitoring);
                         finish();
                         startActivity(getIntent());
                     }
@@ -116,7 +118,7 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
     }
 
     private void FileUploader() {
-        StorageReference ref = storageReference.child("users/"+ fAuth.getCurrentUser().getUid() + "/monitoring/" +System.currentTimeMillis()+"." +getExtension(imguri));
+        StorageReference ref = storageReference.child("users/"+ fAuth.getCurrentUser().getUid() + "/monitoring/" + timeExt+ getExtension(imguri));
 
         upload = ref.putFile(imguri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -150,7 +152,6 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
             imageMonitoring.setImageURI(imguri);
         }
     }
-
 
     /*SCELTA DATA FINE TERAPIA*/
     private void selectEndDate(TextView textView) {
