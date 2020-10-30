@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ListViewTherapy extends AppCompatActivity implements RcViewAdapter.OnItemClickListener{
+public class ListTherapy extends AppCompatActivity implements RcViewTherapyAdapter.OnItemClickListener{
 
     DatabaseReference databaseReference;
     ProgressDialog progressDialog;
     List<Therapy> list = new ArrayList<>();
     RecyclerView recyclerView;
-    RcViewAdapter adapter;
+    RcViewTherapyAdapter adapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -36,8 +36,8 @@ public class ListViewTherapy extends AppCompatActivity implements RcViewAdapter.
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(ListViewTherapy.this));
-        progressDialog = new ProgressDialog(ListViewTherapy.this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(ListTherapy.this));
+        progressDialog = new ProgressDialog(ListTherapy.this);
         databaseReference = FirebaseDatabase.getInstance().getReference("all_therapies").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -47,13 +47,13 @@ public class ListViewTherapy extends AppCompatActivity implements RcViewAdapter.
                     therapy.setKey(snapshot.getKey());
                     list.add(therapy);
                 }
-                adapter = new RcViewAdapter(ListViewTherapy.this, list);
-                adapter.setOnItemClickListener(ListViewTherapy.this);
+                adapter = new RcViewTherapyAdapter(ListTherapy.this, list);
+                adapter.setOnItemClickListener(ListTherapy.this);
                 recyclerView.setAdapter(adapter);
                 progressDialog.dismiss();
                 // AlertDialog se non ci sono terapie
                 if(list.isEmpty()){
-                    final AlertDialog.Builder builderEmpty = new AlertDialog.Builder(ListViewTherapy.this);
+                    final AlertDialog.Builder builderEmpty = new AlertDialog.Builder(ListTherapy.this);
                     Resources res = getResources();
                     String therapyFound = res.getQuantityString(R.plurals.noTherapy, 0);
                     builderEmpty.setTitle(therapyFound);

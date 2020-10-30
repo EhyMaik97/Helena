@@ -116,7 +116,7 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
         btnViewTherapy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent in = new Intent(TherapyActivity.this, ListViewTherapy.class);
+                Intent in = new Intent(TherapyActivity.this, ListTherapy.class);
                 startActivity(in);
             }
         });
