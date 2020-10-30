@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:padding="30dp"
+    tools:context=".Monitoring.AddMonitoringActivity">
+
+    <!--Nome Terapia-->
+    <com.google.android.material.textfield.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/monitoring_name"
+        android:hint="Nome Monitoraggio"
+        android:ems="10"
+        android:inputType="text"
+        android:textSize="20sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/data_referto"
+        android:layout_marginTop="40dp"
+        android:hint="Inserire data del referto"
+        android:ems="10"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/text_view_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/data_referto"
+        android:layout_centerHorizontal="true"
+        android:text="  "
+        android:textSize="18sp"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Aggiungi una o più foto riguardanti documenti medici o analisi"
+        android:layout_marginTop="20dp">
+    </TextView>
+
+    <ImageView
+        android:id="@+id/monitoring_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.13999999"
+        android:src="@drawable/ic_baseline_image_24"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SCEGLI IMMAGINE"
+        android:id="@+id/choose_Btn"
+        android:layout_marginBottom="10dp"></Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="AGGIUNGI"
+        android:id="@+id/add_Btn"
+        android:layout_marginTop="350dp"
+        android:layout_marginBottom="10dp"></Button>
+</LinearLayout>
