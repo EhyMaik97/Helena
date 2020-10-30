@@ -32,7 +32,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class AddMonitoringActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -46,6 +48,7 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
     Button addBtn,chBtn;
     private DatabaseReference dbRef;
     private StorageTask upload;
+    final List<String> pathMonitoringImages = new ArrayList<>();
     String date;
     public Uri imguri;
 
@@ -91,10 +94,11 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
                         else
                             FileUploader();
                         //AGGIUNTA NOME E DATA NEL REALTIME DATABASE
-                        Monitoring monitoring = new Monitoring(nameMonitoring.getText().toString(), date, timeExt+ getExtension(imguri));
-                        System.out.println(monitoring.getPathImage());
+                        Monitoring monitoring = new Monitoring(nameMonitoring.getText().toString(), date);
+                        pathMonitoringImages.add(timeExt+ getExtension(imguri));
                         String cpId = dbRef.push().getKey();
                         dbRef.child(cpId).setValue(monitoring);
+                        dbRef.child(cpId).child("pathImages").setValue(pathMonitoringImages);
                         finish();
                         Intent in = new Intent(AddMonitoringActivity.this, ListMonitoringActivity.class);
                         startActivity(in);

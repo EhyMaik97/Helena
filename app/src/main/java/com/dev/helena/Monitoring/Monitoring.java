@@ -4,7 +4,6 @@ public class Monitoring {
 
     private String nameMonitoring;
     private String date;
-    private String pathImage;
     private String key;
 
     Monitoring()
@@ -12,11 +11,10 @@ public class Monitoring {
 
     }
 
-    public Monitoring(String name, String date, String path)
+    public Monitoring(String name, String date)
     {
         this.nameMonitoring = name;
         this.date = date;
-        this.pathImage = path;
     }
 
 
@@ -35,15 +33,6 @@ public class Monitoring {
     public void setNameMonitoring(String nameMonitoring) {
         this.nameMonitoring = nameMonitoring;
     }
-
-    public String getPathImage() {
-        return pathImage;
-    }
-
-    public void setPathImage(String pathImage) {
-        this.pathImage = pathImage;
-    }
-
 
     @Override
     public String toString() {
