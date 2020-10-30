@@ -11,13 +11,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ClinicDirectory.EditProfile" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Therapy.ListViewTherapy" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Therapy.TherapyActivity" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".MedicalDictionary.MedicalDictionary" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Menu" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Monitoring.ListMonitoringActivity"></activity>
+        <activity android:name=".Monitoring.SearchMonitoringActivity" />
+        <activity android:name=".Monitoring.AddMonitoringActivity" />
+        <activity
+            android:name=".ClinicDirectory.EditProfile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Therapy.ListViewTherapy"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Therapy.TherapyActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MedicalDictionary.MedicalDictionary"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Menu"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ClinicDirectory.Profile" />
-        <activity android:name=".LoginAndRegister.Register"/>
+        <activity android:name=".LoginAndRegister.Register" />
         <activity android:name=".LoginAndRegister.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
