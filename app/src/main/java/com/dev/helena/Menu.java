@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.dev.helena.ClinicDirectory.Profile;
 import com.dev.helena.MedicalDictionary.MedicalDictionary;
 import com.dev.helena.Monitoring.ListMonitoringActivity;
-import com.dev.helena.Therapy.TherapyActivity;
+import com.dev.helena.Therapy.ListTherapyActivity;
 
 public class Menu extends AppCompatActivity
 {
@@ -48,7 +47,7 @@ public class Menu extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent in = new Intent(Menu.this, MedicalDictionary.class);
-                Toast.makeText(Menu.this, "Con questo servizio puoi cercare un sintomo o una patologia di cui vuoi approfondire il significato", Toast.LENGTH_LONG).show();
+//                Toast.makeText(Menu.this, "Con questo servizio puoi cercare un sintomo o una patologia di cui vuoi approfondire il significato", Toast.LENGTH_LONG).show();
                 startActivity(in);
             }
         });
@@ -56,8 +55,8 @@ public class Menu extends AppCompatActivity
         btn_terapie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent in = new Intent(Menu.this, TherapyActivity.class);
-                Toast.makeText(Menu.this, "Con questo servizio puoi gestire le tue terapie ricevendo un alert quando dovrai assurmere un farmaco", Toast.LENGTH_LONG).show();
+                Intent in = new Intent(Menu.this, ListTherapyActivity.class);
+//                Toast.makeText(Menu.this, "Con questo servizio puoi gestire le tue terapie ricevendo un alert quando dovrai assurmere un farmaco", Toast.LENGTH_LONG).show();
                 startActivity(in);
             }
         });

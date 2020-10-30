@@ -18,13 +18,13 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import com.dev.helena.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,14 +41,14 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
     int hour, minutes;
     String date;
     NumberPicker numDos;
-    Button btnConf, btnViewTherapy;
+    Button btnConf;
     final List<TimeDrug> retrunTimeDrug = new ArrayList<>();
     final List<String> retrunDaysDrug = new ArrayList<>();
     String[] listItems;
     boolean[] checkedItems;
     ArrayList<Integer> mUserItems = new ArrayList<>();
-    private FirebaseDatabase db;                            //field per l'istanza del database
-    private DatabaseReference dbRef;             //field per il riferimento alla posizione dei dati
+    private FirebaseDatabase db; //field per l'istanza del database
+    private DatabaseReference dbRef; //field per il riferimento alla posizione dei dati
     private FirebaseUser fbUser;
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
@@ -73,7 +73,6 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
         numDos.setMinValue(1);
         numDos.setMaxValue(10);
         btnConf = findViewById(R.id.btn_conferma);
-        btnViewTherapy = findViewById(R.id.btn_viewAll);
         timeArrayAdapter = new ArrayAdapter<TimeDrug>(TherapyActivity.this, android.R.layout.simple_list_item_1, retrunTimeDrug); //listview e adapter per gli orari
         lv_time_therapy.setAdapter(timeArrayAdapter);
         db = FirebaseDatabase.getInstance();
@@ -102,7 +101,8 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
                         dbRef.child(cpId).child("days").setValue(retrunDaysDrug);
                         Toast.makeText(TherapyActivity.this, "Terapia aggiunta correttamente", Toast.LENGTH_SHORT).show();
                         finish();
-                        startActivity(getIntent());
+                        Intent in = new Intent(TherapyActivity.this, ListTherapyActivity.class);
+                        startActivity(in);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -112,14 +112,6 @@ public class TherapyActivity extends AppCompatActivity implements TimePickerDial
             }
         });
 
-        /*PULSANTE VISUALIZZA LISTA TERAPIE*/
-        btnViewTherapy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent in = new Intent(TherapyActivity.this, ListTherapy.class);
-                startActivity(in);
-            }
-        });
     }
 
     /*SCELTA DATA FINE TERAPIA*/

@@ -101,7 +101,7 @@ public class RcViewTherapyAdapter extends RecyclerView.Adapter<RcViewTherapyAdap
         void onItemClick(int position);
         void onDeleteItemClick(int position);
     }
-    public void setOnItemClickListener(ListTherapy listener) {
+    public void setOnItemClickListener(ListTherapyActivity listener) {
         mListener = (OnItemClickListener) listener;
     }
 }

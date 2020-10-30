@@ -21,7 +21,7 @@
             android:name=".ClinicDirectory.EditProfile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Therapy.ListTherapy"
+            android:name=".Therapy.ListTherapyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Therapy.TherapyActivity"

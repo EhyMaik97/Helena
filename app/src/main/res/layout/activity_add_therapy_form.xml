@@ -119,14 +119,4 @@
         android:text="AGGIUNGI ALLA LISTA TERAPIE">
     </Button>
 
-    <!--Visualizza lista terapie-->
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_viewAll"
-        android:layout_marginTop="15dp"
-        android:clickable="true"
-        android:text="VEDI LISTA TERAPIE">
-    </Button>
-
 </LinearLayout>
