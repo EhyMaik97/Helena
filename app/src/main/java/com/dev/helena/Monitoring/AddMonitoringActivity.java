@@ -1,21 +1,25 @@
 package com.dev.helena.Monitoring;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.dev.helena.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,62 +30,75 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class AddMonitoringActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    String timeExt;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    private Button mSelectBtn, addMonitBtn;
+    private RecyclerView mUploadList;
+    private TextView dataRef, dataViewRef;
+    private EditText nameMonitoring;
+    private List<String> fileNameList;
     FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-    StorageReference storageReference;
-    EditText nameMonitoring;
-    ImageView imageMonitoring;
-    TextView textDateRefView, textDate;
-    Button addBtn,chBtn;
+    private List<String> fileDoneList;
     private DatabaseReference dbRef;
+    private UploadListAdapter uploadListAdapter;
+    private StorageReference mStorage;
+    private String date;
+    public Uri fileUri;
+    private TextView dateviewtxt;
     private StorageTask upload;
-    final List<String> pathMonitoringImages = new ArrayList<>();
-    String date;
-    public Uri imguri;
+    String cpId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_monitoring);
+
+        mStorage = FirebaseStorage.getInstance().getReference();
+        mSelectBtn = findViewById(R.id.select_btn);
+        addMonitBtn = findViewById(R.id.add_monitoring);
+        mUploadList = (RecyclerView) findViewById(R.id.upload_list);
         nameMonitoring = findViewById(R.id.monitoring_name);
-        imageMonitoring = findViewById(R.id.monitoring_image);
-        addBtn = findViewById(R.id.add_Btn);
-        textDate = findViewById(R.id.data_referto);
-        textDateRefView = findViewById(R.id.text_view_date);
-        chBtn = findViewById(R.id.choose_Btn);
-        timeExt = System.currentTimeMillis() + ".";
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
+        dataRef = findViewById(R.id.data_referto);
+        dataViewRef = findViewById(R.id.dateviewtxt);
+        fileNameList = new ArrayList<>();
+        fileDoneList = new ArrayList<>();
         dbRef = FirebaseDatabase.getInstance().getReference("all_monitorings").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        cpId = dbRef.push().getKey();
+
+        fAuth = FirebaseAuth.getInstance();
+
+        uploadListAdapter = new UploadListAdapter(fileNameList, fileDoneList);
+
+        //RecyclerView
+
+        mUploadList.setLayoutManager(new LinearLayoutManager(this));
+        mUploadList.setHasFixedSize(true);
+        mUploadList.setAdapter(uploadListAdapter);
 
 
-        selectEndDate(textDate);
-
-        chBtn.setOnClickListener(new View.OnClickListener() {
+        mSelectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FileChooser();
             }
         });
+        selectDate(dataRef);
 
-
-        addBtn.setOnClickListener(new View.OnClickListener() {
+        addMonitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 FirebaseUser fbUser = fAuth.getCurrentUser();
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("user");
                 String userID = fbUser.getUid();
@@ -89,21 +106,19 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         //AGGIUNTA DELLE FOTO CARICATE NELLO STORAGE
-                        if(upload != null && upload.isInProgress())
+                        if (upload != null && upload.isInProgress())
                             Toast.makeText(AddMonitoringActivity.this, "Caricamento", Toast.LENGTH_LONG).show();
                         else
-                            FileUploader();
+                        {
+
+                        }
                         //AGGIUNTA NOME E DATA NEL REALTIME DATABASE
                         Monitoring monitoring = new Monitoring(nameMonitoring.getText().toString(), date);
-                        pathMonitoringImages.add(timeExt+ getExtension(imguri));
-                        String cpId = dbRef.push().getKey();
                         dbRef.child(cpId).setValue(monitoring);
-                        dbRef.child(cpId).child("pathImages").setValue(pathMonitoringImages);
                         finish();
                         Intent in = new Intent(AddMonitoringActivity.this, ListMonitoringActivity.class);
                         startActivity(in);
                     }
-
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -114,52 +129,80 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
             }
 
         });
-    }
 
-    private String getExtension(Uri uri) {
-        ContentResolver cr =getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
-    }
-
-    private void FileUploader() {
-        StorageReference ref = storageReference.child("users/"+ fAuth.getCurrentUser().getUid() + "/monitoring/" + timeExt+ getExtension(imguri));
-
-        upload = ref.putFile(imguri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(AddMonitoringActivity.this, "Referto caricato con successo", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        // ...
-                    }
-                });
     }
 
     private void FileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
+        startActivityForResult(Intent.createChooser(intent, "Seleziona referti"), RESULT_LOAD_IMAGE);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1 && resultCode==RESULT_OK && data!=null && data.getData()!=null)
-        {
-            imguri=data.getData();
-            imageMonitoring.setImageURI(imguri);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK) {
+
+            if (data.getClipData() != null) {
+
+                int totalItemsSelected = data.getClipData().getItemCount();
+
+                for (int i = 0; i < totalItemsSelected; i++) {
+                    fileUri = data.getClipData().getItemAt(i).getUri();
+                    String fileName = getFileName(fileUri);
+                    fileNameList.add(fileName);
+                    fileDoneList.add("uploading");
+                    uploadListAdapter.notifyDataSetChanged();
+                    StorageReference filesToUpload = mStorage.child("users/" + fAuth.getCurrentUser().getUid() + "/monitoring/" + cpId + "/" + fileName);
+                    final int finalI = i;
+                    filesToUpload.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            fileDoneList.remove(finalI);
+                            fileDoneList.add(finalI, "done");
+                            uploadListAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+
+
+
+            } else if (data.getData() != null) {
+                Toast.makeText(AddMonitoringActivity.this, "Selected Single File", Toast.LENGTH_SHORT).show();
+            }
+
         }
+
+    }
+
+
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 
     /*SCELTA DATA FINE TERAPIA*/
-    private void selectEndDate(TextView textView) {
+    private void selectDate(TextView textView) {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,7 +218,10 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
         date = dayOfMonth + "/" + month + "/" + year;
-        textDateRefView.setText(date);
+        dataViewRef.setText(date);
     }
+
 }
+
+
 
