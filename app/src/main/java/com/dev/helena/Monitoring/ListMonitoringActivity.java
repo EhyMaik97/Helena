@@ -98,6 +98,7 @@ public class ListMonitoringActivity extends AppCompatActivity implements RcViewM
         final Monitoring selectedItem = list.get(position); //recupero la posizione del coupon nella lista
         final String selectedKey = selectedItem.getKey(); //recupero la chiave del coupon
         databaseReference.child(selectedKey).removeValue(); //eliminazione coupon dal database attraverso la chiave
+        //31/10/2020 lo storageReference non ha ancora implementato un metodo per poter eliminare le directory dal backend
         finish();
         startActivity(getIntent());
     }

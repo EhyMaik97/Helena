@@ -108,8 +108,7 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
                         //AGGIUNTA DELLE FOTO CARICATE NELLO STORAGE
                         if (upload != null && upload.isInProgress())
                             Toast.makeText(AddMonitoringActivity.this, "Caricamento", Toast.LENGTH_LONG).show();
-                        else
-                        {
+                        else {
 
                         }
                         //AGGIUNTA NOME E DATA NEL REALTIME DATABASE
@@ -146,7 +145,18 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK) {
 
-            if (data.getClipData() != null) {
+            if (data.getData() != null) { //SELEZIONATO UN SOLO FILE
+                fileUri = data.getData();
+                String fileName = getFileName(fileUri);
+                fileNameList.add(fileName);
+                StorageReference filesToUpload = mStorage.child("users/" + fAuth.getCurrentUser().getUid() + "/monitoring/" + cpId + "/" + fileName);
+                filesToUpload.putFile(fileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        uploadListAdapter.notifyDataSetChanged();
+                    }
+                });
+            } else if (data.getClipData() != null) { //SELEZIONATI PIÙ FILE
 
                 int totalItemsSelected = data.getClipData().getItemCount();
 
@@ -167,16 +177,10 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
                         }
                     });
                 }
-
-
-
-            } else if (data.getData() != null) {
-                Toast.makeText(AddMonitoringActivity.this, "Selected Single File", Toast.LENGTH_SHORT).show();
             }
 
         }
-
-    }
+}
 
 
     public String getFileName(Uri uri) {
