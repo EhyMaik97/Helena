@@ -97,12 +97,12 @@ public class ListTherapyActivity extends AppCompatActivity implements RcViewTher
 
     }
 
-    //Metodo per la cancellazione di un coupon
+    //Metodo per la cancellazione di una terapia
     @Override
     public void onDeleteItemClick(int position) {
-        final Therapy selectedItem = list.get(position); //recupero la posizione del coupon nella lista
-        final String selectedKey = selectedItem.getKey(); //recupero la chiave del coupon
-        databaseReference.child(selectedKey).removeValue(); //eliminazione coupon dal database attraverso la chiave
+        final Therapy selectedItem = list.get(position); //recupero la posizione della terapia nella lista
+        final String selectedKey = selectedItem.getKey(); //recupero la chiave della terapia
+        databaseReference.child(selectedKey).removeValue(); //eliminazione terapia dal database attraverso la chiave
         finish();
         startActivity(getIntent());
     }
