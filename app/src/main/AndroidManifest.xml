@@ -15,6 +15,8 @@
             android:name=".Monitoring.ListMonitoringActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Monitoring.SearchMonitoringActivity" />
+        <activity android:name=".Monitoring.DetailsMonitoringActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Monitoring.AddMonitoringActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity

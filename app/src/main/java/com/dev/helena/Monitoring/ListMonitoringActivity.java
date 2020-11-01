@@ -2,6 +2,7 @@ package com.dev.helena.Monitoring;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,7 +13,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
-
 import com.dev.helena.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,10 +21,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListMonitoringActivity extends AppCompatActivity implements RcViewMonitoringAdapter.OnItemClickListener{
+public class ListMonitoringActivity extends AppCompatActivity implements RcViewMonitoringAdapter.OnItemClickListener {
 
     DatabaseReference databaseReference;
     ProgressDialog progressDialog;
@@ -40,10 +41,10 @@ public class ListMonitoringActivity extends AppCompatActivity implements RcViewM
 
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerMonitoringView);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(ListMonitoringActivity.this));
         progressDialog = new ProgressDialog(ListMonitoringActivity.this);
         databaseReference = FirebaseDatabase.getInstance().getReference("all_monitorings").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -56,8 +57,8 @@ public class ListMonitoringActivity extends AppCompatActivity implements RcViewM
                 adapter.setOnItemClickListener(ListMonitoringActivity.this);
                 recyclerView.setAdapter(adapter);
                 progressDialog.dismiss();
-                // AlertDialog se non ci sono terapie
-                if(list.isEmpty()){
+                // AlertDialog se non ci sono monitoraggi
+                if (list.isEmpty()) {
                     final AlertDialog.Builder builderEmpty = new AlertDialog.Builder(ListMonitoringActivity.this);
                     Resources res = getResources();
                     String monitoringFound = res.getQuantityString(R.plurals.noMonitoring, 0);
@@ -90,7 +91,23 @@ public class ListMonitoringActivity extends AppCompatActivity implements RcViewM
 
     @Override
     public void onItemClick(int position) {
+        Monitoring clickedElement = list.get(position);
+        ArrayList<String> pathElelemntsData = new ArrayList<>();
+        String[] elementsData = {clickedElement.getNameMonitoring(), clickedElement.getDate()};
+        String cpId = clickedElement.getKey();
+        for (String str : clickedElement.getPath()) {
+            pathElelemntsData.add(str);
+        }
+        openDetailActivity(elementsData, cpId, pathElelemntsData);
+    }
 
+    private void openDetailActivity(String[] data, String cpid, ArrayList<String> path) {
+        Intent intent = new Intent(ListMonitoringActivity.this, DetailsMonitoringActivity.class);
+        intent.putExtra("NAME_KEY", data[0]);
+        intent.putExtra("DATE_KEY", data[1]);
+        intent.putExtra("CPID_KEY", cpid);
+        intent.putExtra("PATH_KEYS", path);
+        startActivity(intent);
     }
 
     @Override

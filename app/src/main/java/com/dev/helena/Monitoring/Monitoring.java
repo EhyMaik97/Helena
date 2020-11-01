@@ -1,22 +1,36 @@
 package com.dev.helena.Monitoring;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Monitoring {
 
     private String nameMonitoring;
     private String date;
     private String key;
 
+    private ArrayList<String> path;
+
     Monitoring()
     {
 
     }
 
-    public Monitoring(String name, String date)
+    public Monitoring(String name, String date, ArrayList<String> path)
     {
         this.nameMonitoring = name;
         this.date = date;
+        this.path = path;
     }
 
+
+    public ArrayList<String> getPath() {
+        return path;
+    }
+
+    public void setPath(ArrayList<String> path) {
+        this.path = path;
+    }
 
     public String getDate() {
         return date;

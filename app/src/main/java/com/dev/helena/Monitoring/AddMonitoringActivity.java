@@ -47,7 +47,7 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
     private RecyclerView mUploadList;
     private TextView dataRef, dataViewRef;
     private EditText nameMonitoring;
-    private List<String> fileNameList;
+    private ArrayList<String> fileNameList;
     FirebaseAuth fAuth;
     private List<String> fileDoneList;
     private DatabaseReference dbRef;
@@ -112,7 +112,7 @@ public class AddMonitoringActivity extends AppCompatActivity implements DatePick
 
                         }
                         //AGGIUNTA NOME E DATA NEL REALTIME DATABASE
-                        Monitoring monitoring = new Monitoring(nameMonitoring.getText().toString(), date);
+                        Monitoring monitoring = new Monitoring(nameMonitoring.getText().toString(), date, fileNameList);
                         dbRef.child(cpId).setValue(monitoring);
                         finish();
                         Intent in = new Intent(AddMonitoringActivity.this, ListMonitoringActivity.class);
