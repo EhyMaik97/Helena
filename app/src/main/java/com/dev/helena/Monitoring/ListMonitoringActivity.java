@@ -13,7 +13,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
+
 import com.dev.helena.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +24,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +39,17 @@ public class ListMonitoringActivity extends AppCompatActivity implements RcViewM
     RecyclerView recyclerView;
     RcViewMonitoringAdapter adapter;
     FloatingActionButton addButton;
+    private StorageReference mStorage;
+    private FirebaseAuth fAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_monitoring);
 
+        fAuth = FirebaseAuth.getInstance();
+        mStorage = FirebaseStorage.getInstance().getReference();
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerMonitoringView);
         recyclerView.setLayoutManager(new LinearLayoutManager(ListMonitoringActivity.this));
@@ -115,7 +126,16 @@ public class ListMonitoringActivity extends AppCompatActivity implements RcViewM
         final Monitoring selectedItem = list.get(position); //recupero la posizione del coupon nella lista
         final String selectedKey = selectedItem.getKey(); //recupero la chiave del coupon
         databaseReference.child(selectedKey).removeValue(); //eliminazione coupon dal database attraverso la chiave
-        //31/10/2020 lo storageReference non ha ancora implementato un metodo per poter eliminare le directory dal backend
+        StorageReference imageRef = mStorage.child("users/" + fAuth.getCurrentUser().getUid() + "/monitoring/" + selectedKey);
+        imageRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+            @Override
+            public void onSuccess(ListResult listResult) {
+                for (StorageReference item : listResult.getItems()) {
+                    item.delete();
+                }
+
+            }
+        });
         finish();
         startActivity(getIntent());
     }
